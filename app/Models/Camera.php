@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Camera extends Model
 {
-    protected $fillable = ['nom_cam', 'adresse_ip', 'salle_id'];
+    protected $fillable = ['nom_cam', 'adresse_ip', 'statuts_camera', 'salle_id'];
     public function salle()  { return $this->belongsTo(Salle::class); }
     public function videos() { return $this->hasMany(Video::class); }
 }

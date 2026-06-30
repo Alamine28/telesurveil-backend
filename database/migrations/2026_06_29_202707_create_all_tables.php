@@ -14,6 +14,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('departement_id')->after('role')->constrained('departements')->restrictOnDelete();
+        });
+
         Schema::create('formations', function (Blueprint $table) {
             $table->id();
             $table->string('nom_formation');
@@ -45,6 +49,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom_cam');
             $table->string('adresse_ip')->unique();
+            $table->enum('statuts_camera', ['active', 'inactive', 'maintenance'])->default('active');
             $table->foreignId('salle_id')->constrained('salles')->cascadeOnDelete();
             $table->timestamps();
         });
@@ -83,6 +88,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('evaluation_salle_id')->constrained('evaluation_salle')->cascadeOnDelete();
             $table->foreignId('surveillant_id')->constrained('surveillants')->cascadeOnDelete();
+            $table->unique(['evaluation_salle_id', 'surveillant_id']);
             $table->timestamps();
         });
 
@@ -120,7 +126,7 @@ return new class extends Migration
             $table->text('description');
             $table->date('date_rapport');
             $table->string('fichier_pdf')->nullable();
-            $table->foreignId('incident_id')->constrained('incidents')->cascadeOnDelete();
+            $table->foreignId('incident_id')->unique()->constrained('incidents')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
@@ -130,7 +136,7 @@ return new class extends Migration
             $table->string('action');
             $table->date('date_action');
             $table->time('heure_action');
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('user_id')->constrained('users');
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
@@ -151,6 +157,9 @@ return new class extends Migration
         Schema::dropIfExists('salles');
         Schema::dropIfExists('ecs');
         Schema::dropIfExists('formations');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('departement_id');
+        });
         Schema::dropIfExists('departements');
     }
 };

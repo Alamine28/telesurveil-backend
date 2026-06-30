@@ -16,12 +16,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $dept = Departement::create(['nom_dept' => 'Informatique']);
+
         User::create([
             'prenom'   => 'Admin',
             'nom'      => 'SATIC',
             'email'    => 'admin@uadb.sn',
             'password' => Hash::make('password123'),
             'role'     => 'administrateur',
+            'departement_id' => $dept->id,
         ]);
 
         User::create([
@@ -30,6 +33,7 @@ class DatabaseSeeder extends Seeder
             'email'    => 'scolarite@uadb.sn',
             'password' => Hash::make('password123'),
             'role'     => 'chef_scolarite',
+            'departement_id' => $dept->id,
         ]);
 
         User::create([
@@ -38,9 +42,8 @@ class DatabaseSeeder extends Seeder
             'email'    => 'superviseur@uadb.sn',
             'password' => Hash::make('password123'),
             'role'     => 'superviseur',
+            'departement_id' => $dept->id,
         ]);
-
-        $dept = Departement::create(['nom_dept' => 'Informatique']);
 
         $formation = Formation::create([
             'nom_formation'         => "Développement et Administration d'Applications",
@@ -67,9 +70,10 @@ class DatabaseSeeder extends Seeder
         foreach ($salles as $s) {
             $salle = Salle::create($s);
             Camera::create([
-                'nom_cam'    => "Cam-{$salle->nom_salle}",
-                'adresse_ip' => '192.168.1.' . ($salle->id + 10),
-                'salle_id'   => $salle->id,
+                'nom_cam'        => "Cam-{$salle->nom_salle}",
+                'adresse_ip'     => '192.168.1.' . ($salle->id + 10),
+                'statuts_camera' => 'active',
+                'salle_id'       => $salle->id,
             ]);
         }
 

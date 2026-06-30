@@ -17,9 +17,10 @@ class CameraController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'nom_cam'    => 'required|string|max:100',
-            'adresse_ip' => 'required|ip|unique:cameras,adresse_ip',
-            'salle_id'   => 'required|exists:salles,id',
+            'nom_cam'        => 'required|string|max:100',
+            'adresse_ip'     => 'required|ip|unique:cameras,adresse_ip',
+            'statuts_camera' => 'sometimes|in:active,inactive,maintenance',
+            'salle_id'       => 'required|exists:salles,id',
         ]);
         return response()->json(['success'=>true,'data'=>Camera::create($data)->load('salle')], 201);
     }
@@ -32,9 +33,10 @@ class CameraController extends Controller
     public function update(Request $request, Camera $camera): JsonResponse
     {
         $data = $request->validate([
-            'nom_cam'    => 'sometimes|string|max:100',
-            'adresse_ip' => 'sometimes|ip|unique:cameras,adresse_ip,'.$camera->id,
-            'salle_id'   => 'sometimes|exists:salles,id',
+            'nom_cam'        => 'sometimes|string|max:100',
+            'adresse_ip'     => 'sometimes|ip|unique:cameras,adresse_ip,'.$camera->id,
+            'statuts_camera' => 'sometimes|in:active,inactive,maintenance',
+            'salle_id'       => 'sometimes|exists:salles,id',
         ]);
         $camera->update($data);
         return response()->json(['success'=>true,'data'=>$camera->load('salle')]);

@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(['success'=>true,'data'=>User::paginate(15)]);
+        return response()->json(['success'=>true,'data'=>User::with('departement')->paginate(15)]);
     }
 
     public function store(Request $request): JsonResponse
@@ -23,14 +23,15 @@ class UserController extends Controller
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'role'     => 'required|in:administrateur,chef_scolarite,superviseur',
+            'departement_id' => 'required|exists:departements,id',
         ]);
         $data['password'] = Hash::make($data['password']);
-        return response()->json(['success'=>true,'data'=>User::create($data)], 201);
+        return response()->json(['success'=>true,'data'=>User::create($data)->load('departement')], 201);
     }
 
     public function show(User $user): JsonResponse
     {
-        return response()->json(['success'=>true,'data'=>$user]);
+        return response()->json(['success'=>true,'data'=>$user->load('departement')]);
     }
 
     public function update(Request $request, User $user): JsonResponse
@@ -41,10 +42,11 @@ class UserController extends Controller
             'email'    => 'sometimes|email|unique:users,email,'.$user->id,
             'password' => 'sometimes|string|min:8|confirmed',
             'role'     => 'sometimes|in:administrateur,chef_scolarite,superviseur',
+            'departement_id' => 'sometimes|exists:departements,id',
         ]);
         if (isset($data['password'])) $data['password'] = Hash::make($data['password']);
         $user->update($data);
-        return response()->json(['success'=>true,'data'=>$user]);
+        return response()->json(['success'=>true,'data'=>$user->load('departement')]);
     }
 
     public function destroy(User $user): JsonResponse

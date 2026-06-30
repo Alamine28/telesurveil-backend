@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
-    protected $fillable = ['prenom', 'nom', 'email', 'password', 'role'];
+    protected $fillable = ['prenom', 'nom', 'email', 'password', 'role', 'departement_id'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -22,6 +22,7 @@ class User extends Authenticatable
     public function incidents() { return $this->hasMany(Incident::class); }
     public function rapports()  { return $this->hasMany(Rapport::class); }
     public function logs()      { return $this->hasMany(Log::class); }
+    public function departement() { return $this->belongsTo(Departement::class); }
 
     public function isAdmin()         { return $this->role === 'administrateur'; }
     public function isChefScolarite() { return $this->role === 'chef_scolarite'; }

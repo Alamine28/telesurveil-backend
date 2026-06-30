@@ -12,7 +12,7 @@ class Incident extends Model
 
     public function evaluationSalle() { return $this->belongsTo(EvaluationSalle::class); }
     public function declarant()       { return $this->belongsTo(User::class, 'user_id'); }
-    public function rapports()        { return $this->hasMany(Rapport::class); }
+    public function rapport()         { return $this->hasOne(Rapport::class); }
     public function videos()
     {
         return $this->belongsToMany(Video::class, 'video_incidents')

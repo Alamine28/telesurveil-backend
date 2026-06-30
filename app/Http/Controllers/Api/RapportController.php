@@ -25,7 +25,7 @@ class RapportController extends Controller
     {
         $data = $request->validate([
             'description' => 'required|string',
-            'incident_id' => 'required|exists:incidents,id',
+            'incident_id' => 'required|exists:incidents,id|unique:rapports,incident_id',
         ]);
         $rapport = $this->rapportService->generer($data, $request->user()->id);
         return response()->json(['success'=>true,'data'=>$rapport->load('incident')], 201);

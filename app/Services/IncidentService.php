@@ -64,6 +64,6 @@ class IncidentService
             'ip_address'   => $ip,
         ]);
 
-        return $incident->fresh(['evaluationSalle','declarant','videos','rapports']);
+        return $incident->fresh(['evaluationSalle','declarant','videos','rapport']);
     }
 }

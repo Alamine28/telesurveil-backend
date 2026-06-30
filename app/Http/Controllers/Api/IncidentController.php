@@ -39,7 +39,7 @@ class IncidentController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data'    => $incident->load(['evaluationSalle.salle','declarant','videos','rapports']),
+            'data'    => $incident->load(['evaluationSalle.salle','declarant','videos','rapport']),
         ]);
     }
 
