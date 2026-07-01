@@ -49,7 +49,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom_cam');
             $table->string('adresse_ip')->unique();
-            $table->enum('statuts_camera', ['active', 'inactive', 'maintenance'])->default('active');
+            $table->enum('statuts_camera', ['actif', 'inactif', 'deconnecte'])->default('actif');
             $table->foreignId('salle_id')->constrained('salles')->cascadeOnDelete();
             $table->timestamps();
         });
@@ -80,7 +80,9 @@ return new class extends Migration
             $table->foreignId('evaluation_id')->constrained('evaluations')->cascadeOnDelete();
             $table->foreignId('salle_id')->constrained('salles')->cascadeOnDelete();
             $table->string('timestamp')->nullable();
-            $table->unique(['evaluation_id', 'salle_id']);
+            $table->boolean('enreg_demarre')->default(false);
+            $table->date('date_debut_enreg')->nullable();
+            $table->unique(['evaluation_id', 'salle_id'], 'eva_salle_unique');
             $table->timestamps();
         });
 
@@ -88,7 +90,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('evaluation_salle_id')->constrained('evaluation_salle')->cascadeOnDelete();
             $table->foreignId('surveillant_id')->constrained('surveillants')->cascadeOnDelete();
-            $table->unique(['evaluation_salle_id', 'surveillant_id']);
+            $table->unique(['evaluation_salle_id', 'surveillant_id'], 'eva_salle_surv_unique');
             $table->timestamps();
         });
 
@@ -136,7 +138,7 @@ return new class extends Migration
             $table->string('action');
             $table->date('date_action');
             $table->time('heure_action');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });

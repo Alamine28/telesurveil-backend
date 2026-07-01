@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
             Camera::create([
                 'nom_cam'        => "Cam-{$salle->nom_salle}",
                 'adresse_ip'     => '192.168.1.' . ($salle->id + 10),
-                'statuts_camera' => 'active',
+                'statuts_camera' => 'actif',
                 'salle_id'       => $salle->id,
             ]);
         }
